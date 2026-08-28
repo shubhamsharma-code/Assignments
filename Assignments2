@@ -1,0 +1,166 @@
+#include <iostream>
+using namespace std;
+enum Category {
+    ELECTRONICS,
+    CLOTHING,
+    GROCERY,
+    BOOKS
+};
+enum OrderStatus {
+    PENDING,
+    CONFIRMED,
+    CANCELLED
+};
+
+enum PaymentStatus {
+    UNPAID,
+    PAID,
+    REFUNDED
+};
+
+class Product {
+public:
+    int productID;
+    string name;
+    double price;
+    int stock;
+    Category category;
+
+    Product(int id, string n, double p, int s, Category c) {
+        productID = id;
+        name = n;
+        price = p;
+        stock = s;
+        category = c;
+    }
+
+    void displayProduct() {
+        cout << "ID: " << productID << endl;
+        cout << "Name: " << name << endl;
+        cout << "Price: $" << price <<endl;
+        cout << "Stock: " << stock << endl;
+        cout << "Available: " << (checkAvailability() ? "Yes" : "No") <<endl;
+    }
+
+    void updateStock(int amount) {
+        stock += amount;
+    }
+
+    bool checkAvailability() {
+        return stock > 0;
+    }
+};
+class Customer {
+private:
+    string customerId;
+    string name;
+    string email;
+    string phone;
+    string address;
+
+public:
+    Customer(string id, string n, string e, string p, string addr) {
+        customerId = id;
+        name = n;
+        email = e;
+        phone = p;
+        address = addr;
+    }
+
+   
+    void displayDetails() {
+        cout << "ID:      " << customerId << endl;
+        cout << "Name:    " << name << endl;
+        cout << "Email:   " << email << endl;
+        cout << "Phone:   " << phone << endl;
+        cout << "Address: " << address << endl;
+    }
+
+    void updateDetails(string n, string e, string p, string addr) {
+        name = n;
+        email = e;
+        phone = p;
+        address = addr;
+    }
+};
+struct Order {
+    string orderId;
+    string customerId;
+    double totalAmount;
+    OrderStatus orderStatus;
+    PaymentStatus paymentStatus;
+
+
+    Order(string oId, string cId, double amount) {
+        orderId = oId;
+        customerId = cId;
+        totalAmount = amount;
+        orderStatus = PENDING;
+        paymentStatus = UNPAID;
+    }
+
+    void display() {
+        cout << "Order ID: " << orderId << endl;
+        cout << "Customer ID: " << customerId << endl;
+        cout << "Total Amount: " << totalAmount << endl;
+        if (orderStatus == PENDING) cout << "Pending";
+        else if (orderStatus == CONFIRMED) cout << "Confirmed";
+        else if (orderStatus == CANCELLED) cout << "Cancelled";
+        cout << endl;
+        if (paymentStatus == UNPAID) cout << "Unpaid";
+        else if (paymentStatus == PAID) cout << "Paid";
+        else if (paymentStatus == REFUNDED) cout << "Refunded";
+        cout << endl;
+    }
+
+    void updateAmount(double newAmount) {
+        totalAmount = newAmount;
+        cout << "\nAmount updated to $" << newAmount << endl;
+    }
+
+    void confirm() {
+        orderStatus = CONFIRMED;
+        paymentStatus = PAID;
+        cout << "Order confirmed and marked as Paid!" << endl;
+    }
+
+
+    void cancel() {
+        orderStatus = CANCELLED;
+        if (paymentStatus == PAID) {
+            paymentStatus = REFUNDED;
+            cout << "\nOrder cancelled. Money refunded!" << endl;
+        } else {
+            cout << "\nOrder cancelled!" << endl;
+        }
+    }
+};
+int main() 
+{
+    Product p(101, "Phone", 599, 10, ELECTRONICS);
+
+    p.displayProduct();
+
+    p.updateStock(-10);
+    p.displayProduct();
+
+    p.updateStock(5);
+    p.displayProduct();
+    Customer c1("C101", "Shubahm", "shub@mail.com", "1234-1234", "Punjab");
+    c1.displayDetails();
+    c1.updateDetails("Ravi", "ravinew@mail.com", "9999-9999", "Himachal");
+
+    c1.displayDetails();
+    Order myOrder("101", "01", 150.0);
+    myOrder.display();
+
+    myOrder.updateAmount(200.0);
+
+    myOrder.confirm();
+    myOrder.display();
+
+    myOrder.cancel();
+    myOrder.display();
+    
+    return 0;
+}
